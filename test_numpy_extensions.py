@@ -175,6 +175,19 @@ class TestNumpyExtensions(TestCaseNp):
         result = npe.relabel(a)
         np.testing.assert_array_equal(result, expected_result)
 
+    def test_extend_nd_1d(self):
+        input_arr_1d = np.array([[1], [2], [3]])
+        expected_output_1d = np.array([[1, 0, 0], [2, 0, 0], [3, 0, 0]])
+        self.assertTrue(np.array_equal(npe.extend_nd(input_arr_1d, 3), expected_output_1d))
+    def test_extend_nd_2d(self):
+        input_arr_2d = np.array([[1, 2], [3, 4], [5, 6]])
+        expected_output_2d = np.array([[1, 2, 0], [3, 4, 0], [5, 6, 0]])
+        self.assertTrue(np.array_equal(npe.extend_nd(input_arr_2d, 3), expected_output_2d))
+    def test_extend_nd_3d(self):
+        input_arr_3d = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
+        expected_output_3d = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
+        self.assertTrue(np.array_equal(npe.extend_nd(input_arr_3d, 3), expected_output_3d))
+
 
 if __name__ == '__main__':
     unittest.main()

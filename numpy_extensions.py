@@ -251,3 +251,20 @@ class numpy_extensions():
         result[mask] = np.frompyfunc(r, 1, 1)(result[mask])
         result = result.reshape(shape)
         return result.astype(replacements.dtype)
+    
+    def extend_nd(a: np.ndarray, dim: int) -> np.ndarray:
+        """
+        # Notes
+
+        Extends the second axis of a to the given dimension.
+
+        # Examples
+
+        >>> ne.extend_nd(np.array([[1],[2],[3]]), 3)
+        array([[1,0,0], [2,0,0], [3,0,0]])
+        """
+
+        missing_dims = max(dim - a.shape[1], 0)
+        # pad with zeros on the right side of the second axis
+        result_arr = np.pad(a, ((0, 0), (0, missing_dims)))
+        return result_arr
