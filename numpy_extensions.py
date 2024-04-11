@@ -252,7 +252,8 @@ class numpy_extensions():
         result = result.reshape(shape)
         return result.astype(replacements.dtype)
     
-    def extend_nd(a: np.ndarray, dim: int) -> np.ndarray:
+    @classmethod
+    def extend_nd(cls, a: np.ndarray, dim: int) -> np.ndarray:
         """
         # Notes
 
@@ -268,3 +269,13 @@ class numpy_extensions():
         # pad with zeros on the right side of the second axis
         result_arr = np.pad(a, ((0, 0), (0, missing_dims)))
         return result_arr
+    
+    @classmethod
+    def array_to_json(cls, a: np.ndarray) -> dict[str, any]:
+        return {
+            'data': a.tolist(),
+            'dtype': str(a.dtype)
+        }
+    @classmethod
+    def array_from_json(cls, d: dict[str, any]) -> np.ndarray:
+        return np.array(d['data'], dtype=np.dtype(d['dtype']))

@@ -188,6 +188,30 @@ class TestNumpyExtensions(TestCaseNp):
         expected_output_3d = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12]])
         self.assertTrue(np.array_equal(npe.extend_nd(input_arr_3d, 3), expected_output_3d))
 
+    def test_array_to_json(self):
+        a = np.array([1, 2, 3], dtype=np.int64)
+        expected_json = {
+            'data': [1, 2, 3],
+            'dtype': 'int64'
+        }
+        result_json = npe.array_to_json(a)
+        self.assertEqual(result_json, expected_json)
+    def test_array_from_json(self):
+        json_data = {
+            'data': [1, 2, 3],
+            'dtype': 'int64'
+        }
+        expected_array = np.array([1, 2, 3], dtype=np.int64)
+        result_array = npe.array_from_json(json_data)
+        np.testing.assert_array_equal(result_array, expected_array)
+    def test_double_array_json_int(self):
+        a = np.array([1, 2, 3])
+        result_array = npe.array_from_json(npe.array_to_json(a))
+        np.testing.assert_array_equal(result_array, a)
+    def test_double_array_json_str(self):
+        a = np.array(['a', 'b', 'c'	])
+        result_array = npe.array_from_json(npe.array_to_json(a))
+        np.testing.assert_array_equal(result_array, a)
 
 if __name__ == '__main__':
     unittest.main()
