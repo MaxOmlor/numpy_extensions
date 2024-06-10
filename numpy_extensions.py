@@ -66,6 +66,9 @@ class numpy_extensions():
         result = result.reshape(shape)
         return result.astype(replacements.dtype)
 
+    # todo: change name to grid_setitem
+    # todo: adjust implementation to the implementation in grid_getitems
+    # todo: add grid_setitems
     @classmethod
     def setitem_multi_index(cls, a: np.ndarray, ids: np.ndarray, values: np.ndarray) -> np.ndarray:
         flat_a = a.flatten()
@@ -74,6 +77,9 @@ class numpy_extensions():
         flat_a[flat_ids] = values
 
         return flat_a.reshape(a.shape)
+    
+    # todo: change name to grid_getitem
+    # todo: adjust implementation to the implementation in grid_getitems
     @classmethod
     def getitem_multi_index(cls, a: np.ndarray, ids: np.ndarray) -> np.ndarray:
         flat_a = a.flatten()
@@ -81,10 +87,21 @@ class numpy_extensions():
 
         return flat_a[flat_ids]
 
+    @classmethod
+    def grid_getitems(cls, a: np.ndarray, coords: np.ndarray) -> np.ndarray:
+        flat_coords = ravel_coords(coords, a.shape)
+        return a.flat[flat_coords.astype(int)]
 
     @classmethod
     def get_basis(cls, dims: tuple[int,int,int]) -> np.ndarray:
         return np.array([np.prod(dims[i+1:]) for i in np.arange(len(dims))])
+
+    @classmethod
+    def ravel_coords(cls, coords: np.ndarray, shape: np.ndarray) -> np.ndarray:
+        basis = get_basis(shape)
+        coords_raveled = np.dot(coords, basis)
+        return coords_raveled
+    
     @classmethod
     def flatten_multi_index(cls, ids: np.ndarray, dims, dtype: np.dtype=None, axis: int=1) -> np.ndarray:
         '''
@@ -279,3 +296,12 @@ class numpy_extensions():
     @classmethod
     def array_from_json(cls, d: dict[str, any]) -> np.ndarray:
         return np.array(d['data'], dtype=np.dtype(d['dtype']))
+
+    @classmethod
+    def extract_subcube(cls, array: np.ndarray, start_indices: np.ndarray, end_indices: np.ndarray) -> np.ndarray:
+        if len(start_indices) != array.ndim or len(end_indices) != array.ndim:
+            raise ValueError("Start and end indices must match the number of dimensions of the array.")
+        
+        slices = tuple(slice(start, end) for start, end in zip(start_indices, end_indices))
+        subcube = array[slices]
+        return subcube
