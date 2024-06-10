@@ -75,7 +75,7 @@ class numpy_extensions():
 
         return flat_a.reshape(a.shape)
     @classmethod
-    def getitem_multi_index(cls, a: np.ndarray, ids: np.ndarray, values: np.ndarray) -> np.ndarray:
+    def getitem_multi_index(cls, a: np.ndarray, ids: np.ndarray) -> np.ndarray:
         flat_a = a.flatten()
         flat_ids = np.ravel_multi_index(np.transpose(ids), a.shape)
 
